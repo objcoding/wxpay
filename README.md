@@ -1,1 +1,1 @@
-# WXPay-SDK-Go
+# go-pay
