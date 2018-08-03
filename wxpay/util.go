@@ -31,7 +31,9 @@ func XmlToMap(strXml string) Params {
 			content := string([]byte(token))
 			value = content
 		}
-		params.SetString(key, value)
+		if key != "xml" {
+			params.SetString(key, value)
+		}
 	}
 
 	return params
