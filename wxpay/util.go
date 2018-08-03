@@ -2,7 +2,12 @@ package wxpay
 
 import (
 	"bytes"
+	"crypto/md5"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/xml"
+	"errors"
+	"github.com/satori/go.uuid"
 	"strings"
 )
 
@@ -32,10 +37,10 @@ func XmlToMap(strXml string) Params {
 	return params
 }
 
-func MapToXml(reqData *Params) string {
+func MapToXml(reqData Params) string {
 	var buf bytes.Buffer
 	buf.WriteString(`<xml>`)
-	for k, v := range *reqData {
+	for k, v := range reqData {
 		buf.WriteString(`<`)
 		buf.WriteString(k)
 		buf.WriteString(`><![CDATA[`)
@@ -73,5 +78,45 @@ func Sign(params Params) string {
 	buf.WriteString(`key=`)
 	buf.WriteString(config.Key)
 
-	return buf.String()
+	var (
+		dataMd5    [16]byte
+		dataSha256 [32]byte
+		str        string
+	)
+
+	switch params.GetString("sign_type") {
+	case MD5:
+		dataMd5 = md5.Sum(buf.Bytes())
+		str = hex.EncodeToString(dataMd5[:]) //需转换成切片
+	case HMACSHA256:
+		dataSha256 = sha256.Sum256(buf.Bytes())
+		str = hex.EncodeToString(dataSha256[:])
+	}
+
+	return strings.ToUpper(str)
+}
+
+func GenerateSignedXml(params Params) string {
+	sign := Sign(params)
+	params.SetString(FIELD_SIGN, sign)
+	return MapToXml(params)
+}
+
+func IsSignatureValid(xmlStr string) bool {
+	params := XmlToMap(xmlStr)
+	if !params.ContainsKey(FIELD_SIGN) {
+		return false
+	}
+	sign := params.GetString(FIELD_SIGN)
+	newSign := Sign(params)
+	return sign == newSign
+}
+
+// 生成随机字符串
+func NonceStr() (string, error) {
+	uid, err := uuid.NewV4()
+	if err != nil {
+		return "", errors.New("生成随机字符串")
+	}
+	return strings.Replace(uid.String(), "-", "", -1), nil
 }

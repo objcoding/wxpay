@@ -22,3 +22,9 @@ func (p Params) GetInt64(k string) int64 {
 	i, _ := strconv.ParseInt(p.GetString(k), 10, 64)
 	return i
 }
+
+// 判断key是否存在
+func (p Params) ContainsKey(key string) bool {
+	_, ok := p[FIELD_SIGN]
+	return ok
+}
