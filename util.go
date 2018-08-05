@@ -5,15 +5,15 @@ import (
 	"encoding/xml"
 	"errors"
 	"github.com/satori/go.uuid"
+	"io"
 	"strings"
 )
 
-func XmlToMap(strXml string) Params {
+func XmlToMap(r io.Reader) Params {
 
 	params := make(Params)
 
-	inputReader := strings.NewReader(strXml)
-	decoder := xml.NewDecoder(inputReader)
+	decoder := xml.NewDecoder(r)
 
 	var (
 		key   string
