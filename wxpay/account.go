@@ -2,7 +2,7 @@ package wxpay
 
 import "io"
 
-type Config struct {
+type Account struct {
 	AppID                string
 	MchID                string
 	Key                  string
@@ -11,8 +11,8 @@ type Config struct {
 	HttpReadTimeoutMs    int
 }
 
-func Instance(AppID string, MchID string, Key string, HttpConnectTimeoutMs int, HttpReadTimeoutMs int) *Config {
-	return &Config{
+func NewConfig(AppID string, MchID string, Key string, HttpConnectTimeoutMs int, HttpReadTimeoutMs int) *Account {
+	return &Account{
 		AppID:                AppID,
 		MchID:                MchID,
 		Key:                  Key,
@@ -21,6 +21,6 @@ func Instance(AppID string, MchID string, Key string, HttpConnectTimeoutMs int, 
 	}
 }
 
-func (c *Config) setCertStream(reader io.Reader) {
-	c.certStream = reader
+func (a *Account) setCertStream(reader io.Reader) {
+	a.certStream = reader
 }
