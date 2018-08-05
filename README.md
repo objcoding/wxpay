@@ -1,1 +1,1 @@
-# go-pay
+# wxpay for golang
