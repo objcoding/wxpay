@@ -22,7 +22,7 @@ wxpay提供了对应的方法：
 | ShortUrl         | 转换短链接       |
 | AuthCodeToOpenid | 授权码查询openid |
 
-* 参数为`Map<String, String>`对象，返回类型也是`Map<String, String>`。
+* 参数为`Params`类型，返回类型也是`Params`，`Params` 是一个 map[string]string 类型的结构体。
 * 方法内部会将参数会转换成含有`appid`、`mch_id`、`nonce_str`、`sign\_type`和`sign`的XML；
 * 默认使用MD5进行签名；
 * 通过HTTPS请求得到返回数据后会对其做必要的处理（例如验证签名，签名错误则抛出异常）。
