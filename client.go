@@ -48,7 +48,7 @@ func (c *Client) SetSignType(signType string) {
 	c.signType = signType
 }
 
-func (c *Client) setAccount(account *Account) {
+func (c *Client) SetAccount(account *Account) {
 	c.account = account
 }
 
@@ -107,7 +107,7 @@ func (c *Client) postWithCert(url string, params Params) (string, error) {
 }
 
 // 生成带有签名的xml字符串
-func (c *Client) GenerateSignedXml(params Params) string {
+func (c *Client) generateSignedXml(params Params) string {
 	sign := c.Sign(params)
 	params.SetString(FIELD_SIGN, sign)
 	return MapToXml(params)
