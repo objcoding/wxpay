@@ -29,7 +29,9 @@ func XmlToMap(r io.Reader) Params {
 			value = content
 		}
 		if key != "xml" {
-			params.SetString(key, value)
+			if value != "\n" {
+				params.SetString(key, value)
+			}
 		}
 	}
 

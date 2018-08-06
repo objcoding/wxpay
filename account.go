@@ -22,7 +22,7 @@ func NewAccount(AppID string, MchID string, ApiKey string) *Account {
 }
 
 // 设置证书
-func (a *Account) setCertData(certPath string) {
+func (a *Account) SetCertData(certPath string) {
 	certData, err := ioutil.ReadFile(certPath)
 	if err != nil {
 		log.Println("读取证书失败")
