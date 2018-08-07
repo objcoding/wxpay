@@ -125,4 +125,4 @@ return wxpay.Notifies{}.NotOK("支付失败或退款失败了")
 
 
 ## License
-Apache License 2.0
+MIT license
