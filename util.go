@@ -2,14 +2,18 @@ package wxpay
 
 import (
 	"bytes"
+	"crypto/tls"
+	"encoding/pem"
 	"encoding/xml"
 	"errors"
 	"github.com/satori/go.uuid"
+	"golang.org/x/crypto/pkcs12"
 	"io"
+	"log"
 	"strings"
 )
 
-func XmlToMap(r io.Reader) Params {
+func xmlToMap(r io.Reader) Params {
 
 	params := make(Params)
 
@@ -38,7 +42,7 @@ func XmlToMap(r io.Reader) Params {
 	return params
 }
 
-func MapToXml(reqData Params) string {
+func mapToXml(reqData Params) string {
 	var buf bytes.Buffer
 	buf.WriteString(`<xml>`)
 	for k, v := range reqData {
@@ -56,10 +60,38 @@ func MapToXml(reqData Params) string {
 }
 
 // 生成随机字符串
-func NonceStr() string {
+func nonceStr() string {
 	uid, err := uuid.NewV4()
 	if err != nil {
 		return errors.New("生成随机字符串").Error()
 	}
 	return strings.Replace(uid.String(), "-", "", -1)
+}
+
+// 将Pkcs12转成Pem
+func pkcs12ToPem(p12 []byte, password string) tls.Certificate {
+
+	blocks, err := pkcs12.ToPEM(p12, password)
+
+	// 从恐慌恢复
+	defer func() {
+		if x := recover(); x != nil {
+			log.Print(x)
+		}
+	}()
+
+	if err != nil {
+		panic(err)
+	}
+
+	var pemData []byte
+	for _, b := range blocks {
+		pemData = append(pemData, pem.EncodeToMemory(b)...)
+	}
+
+	cert, err := tls.X509KeyPair(pemData, pemData)
+	if err != nil {
+		panic(err)
+	}
+	return cert
 }

@@ -54,7 +54,7 @@ params.SetString("body", "test").
 		SetString("out_trade_no", "436577857").
 		SetInt64("total_fee", 1).
 		SetString("spbill_create_ip", "127.0.0.1").
-		SetString("notify_url", "http://objcoding.com").
+		SetString("notify_url", "http://notify.objcoding.com/notify").
 		SetString("trade_type", "APP")
 p, _ := client.UnifiedOrder(params)
 
@@ -65,10 +65,10 @@ p, _ := client.OrderQuery(params)
 
 // 退款
 params := make(wxpay.Params)
-params.SetString("body", "test").
-    SetString("out_trade_no", "3568785").
-    SetInt64("total_fee", 1).
-    SetInt64("refund_fee", 1)
+params.SetString("out_trade_no", "3568785").
+		SetString("out_refund_no", "19374568").
+		SetInt64("total_fee", 1).
+		SetInt64("refund_fee", 1)
 p, _ := client.Refund(params)
 
 // 退款查询
@@ -119,7 +119,7 @@ b := client.ValidSign(params)
 return wxpay.Notifies{}.OK()
 
 // 支付或退款返回失败信息
-wxpay.Notifies{}.NotOK("支付失败或退款失败了")
+return wxpay.Notifies{}.NotOK("支付失败或退款失败了")
 
 ```
 
