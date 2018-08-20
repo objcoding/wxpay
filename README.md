@@ -2,6 +2,9 @@
 
 注：本人照着微信支付官方 SDK Java 版，用 Go 语言实现的一个微信支付 SDK，与 Java 版功能一致，具备轻量易上手，且功能齐全的特点，理论上性能也会比 Java 版的更快。
 
+#### Github 地址: [wxpay](https://github.com/objcoding/wxpay)
+
+
 ## 微信支付开发文档API
 
 对[微信支付开发者文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)中给出的API进行了封装。
