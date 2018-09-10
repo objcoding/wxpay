@@ -3,7 +3,7 @@
 ![Powered by zch](https://img.shields.io/badge/Powered%20by-zch-blue.svg?style=flat-square) ![Language](https://img.shields.io/badge/language-Go-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
 
 
-wxpay 提供了对应的方法：
+wxpay 提供了以下的方法：
 
 | 方法名              | 说明          |
 | ---------------- | ----------- |
