@@ -6,19 +6,19 @@ import (
 )
 
 type Account struct {
-	AppID     string
-	MchID     string
-	ApiKey    string
-	CertData  []byte
+	appID     string
+	mchID     string
+	apiKey    string
+	certData  []byte
 	isSandbox bool
 }
 
 // 创建微信支付账号
-func NewAccount(AppID string, MchID string, ApiKey string, isSanbox bool) *Account {
+func NewAccount(appID string, mchID string, apiKey string, isSanbox bool) *Account {
 	return &Account{
-		AppID:     AppID,
-		MchID:     MchID,
-		ApiKey:    ApiKey,
+		appID:     appID,
+		mchID:     mchID,
+		apiKey:    apiKey,
 		isSandbox: isSanbox,
 	}
 }
@@ -30,5 +30,5 @@ func (a *Account) SetCertData(certPath string) {
 		log.Println("读取证书失败")
 		return
 	}
-	a.CertData = certData
+	a.certData = certData
 }

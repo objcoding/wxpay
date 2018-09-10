@@ -50,8 +50,8 @@ func (c *Client) SetAccount(account *Account) {
 
 // 向 params 中添加 appid、mch_id、nonce_str、sign_type、sign
 func (c *Client) fillRequestData(params Params) Params {
-	params["appid"] = c.account.AppID
-	params["mch_id"] = c.account.MchID
+	params["appid"] = c.account.appID
+	params["mch_id"] = c.account.mchID
 	params["nonce_str"] = nonceStr()
 	params["sign_type"] = c.signType
 	params["sign"] = c.Sign(params)
@@ -75,12 +75,12 @@ func (c *Client) postWithoutCert(url string, params Params) (string, error) {
 
 // https need cert post
 func (c *Client) postWithCert(url string, params Params) (string, error) {
-	if c.account.CertData == nil {
+	if c.account.certData == nil {
 		return "", errors.New("证书数据为空")
 	}
 
 	// 将pkcs12证书转成pem
-	cert := pkcs12ToPem(c.account.CertData, c.account.MchID)
+	cert := pkcs12ToPem(c.account.certData, c.account.mchID)
 
 	config := &tls.Config{
 		Certificates: []tls.Certificate{cert},
@@ -143,7 +143,7 @@ func (c *Client) Sign(params Params) string {
 	}
 	// 加入apiKey作加密密钥
 	buf.WriteString(`key=`)
-	buf.WriteString(c.account.ApiKey)
+	buf.WriteString(c.account.apiKey)
 
 	var (
 		dataMd5    [16]byte
