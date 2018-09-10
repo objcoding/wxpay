@@ -31,8 +31,8 @@ wxpay 提供了以下的方法：
 
 ## 安装
 
-```
-go get github.com/objcoding/wxpay
+```bash
+$ go get github.com/objcoding/wxpay
 
 ```
 
@@ -40,13 +40,13 @@ go get github.com/objcoding/wxpay
 ## 示例
 
 ```cgo
-
 // 新建微信支付客户端
 client := wxpay.NewClient(wxpay.NewAccount{
 	AppID: "appid",
 	MchID: "mchid",
 	ApiKey: "apiKey",
-}, false) // sandbox环境请传true
+	isSanbox: false
+})
 
 // 统一下单
 params := make(wxpay.Params)
@@ -79,15 +79,14 @@ p, _ := client.RefundQuery(params)
 ```
 
 ```cgo
-
 // 创建支付账户
-account := wxpay.NewAccount("appid", "mchid", "apiKey")
+account := wxpay.NewAccount("appid", "mchid", "apiKey", false)
 
 // 设置证书
 account.SetCertData("证书地址")
 
-// 新建微信支付客户端
-client := wxpay.NewClient(account, false) // sandbox环境请传true
+// 设置支付账户
+client.setAccount(account)
 
 // 设置http请求超时时间
 client.SetHttpConnectTimeoutMs(2000)
@@ -98,13 +97,9 @@ client.SetHttpReadTimeoutMs(1000)
 // 更改签名类型
 client.SetSignType(HMACSHA256)
 
-// 设置支付账户
-client.setAccount(account)
-
 ```
 
 ```cgo
-
 // 签名
 signStr := client.Sign(params)
 
@@ -114,7 +109,6 @@ b := client.ValidSign(params)
 ```
 
 ```cgo
-
 // xml解析
 params := wxpay.XmlToMap(xmlStr)
 
@@ -124,7 +118,6 @@ b := wxpay.MapToXml(params)
 ```
 
 ```cgo
-
 // 支付或退款返回成功信息
 return wxpay.Notifies{}.OK()
 

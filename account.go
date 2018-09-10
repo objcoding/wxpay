@@ -6,18 +6,20 @@ import (
 )
 
 type Account struct {
-	AppID    string
-	MchID    string
-	ApiKey   string
-	CertData []byte
+	AppID     string
+	MchID     string
+	ApiKey    string
+	CertData  []byte
+	isSandbox bool
 }
 
 // 创建微信支付账号
-func NewAccount(AppID string, MchID string, ApiKey string) *Account {
+func NewAccount(AppID string, MchID string, ApiKey string, isSanbox bool) *Account {
 	return &Account{
-		AppID:  AppID,
-		MchID:  MchID,
-		ApiKey: ApiKey,
+		AppID:     AppID,
+		MchID:     MchID,
+		ApiKey:    ApiKey,
+		isSandbox: isSanbox,
 	}
 }
 

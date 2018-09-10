@@ -18,17 +18,15 @@ const bodyType = "application/xml; charset=utf-8"
 type Client struct {
 	account              *Account // 支付账号
 	signType             string   // 签名类型
-	useSandbox           bool     // 是否为沙箱
 	httpConnectTimeoutMs int      // 连接超时时间
 	httpReadTimeoutMs    int      // 读取超时时间
 }
 
 // 创建微信支付客户端
-func NewClient(account *Account, useSandbox bool) *Client {
+func NewClient(account *Account) *Client {
 	return &Client{
 		account:              account,
 		signType:             MD5,
-		useSandbox:           useSandbox,
 		httpConnectTimeoutMs: 2000,
 		httpReadTimeoutMs:    1000,
 	}
@@ -190,7 +188,7 @@ func (c *Client) processResponseXml(xmlStr string) (Params, error) {
 // 统一下单
 func (c *Client) UnifiedOrder(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_UNIFIEDORDER_URL
 	} else {
 		url = UNIFIEDORDER_URL
@@ -205,7 +203,7 @@ func (c *Client) UnifiedOrder(params Params) (Params, error) {
 // 刷卡支付
 func (c *Client) MicroPay(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_MICROPAY_URL
 	} else {
 		url = MICROPAY_URL
@@ -220,7 +218,7 @@ func (c *Client) MicroPay(params Params) (Params, error) {
 // 退款
 func (c *Client) Refund(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_REFUND_URL
 	} else {
 		url = REFUND_URL
@@ -235,7 +233,7 @@ func (c *Client) Refund(params Params) (Params, error) {
 // 订单查询
 func (c *Client) OrderQuery(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_ORDERQUERY_URL
 	} else {
 		url = ORDERQUERY_URL
@@ -250,7 +248,7 @@ func (c *Client) OrderQuery(params Params) (Params, error) {
 // 退款查询
 func (c *Client) RefundQuery(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_REFUNDQUERY_URL
 	} else {
 		url = REFUNDQUERY_URL
@@ -265,7 +263,7 @@ func (c *Client) RefundQuery(params Params) (Params, error) {
 // 撤销订单
 func (c *Client) Reverse(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_REVERSE_URL
 	} else {
 		url = REVERSE_URL
@@ -280,7 +278,7 @@ func (c *Client) Reverse(params Params) (Params, error) {
 // 关闭订单
 func (c *Client) CloseOrder(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_CLOSEORDER_URL
 	} else {
 		url = CLOSEORDER_URL
@@ -295,7 +293,7 @@ func (c *Client) CloseOrder(params Params) (Params, error) {
 // 对账单下载
 func (c *Client) DownloadBill(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_DOWNLOADBILL_URL
 	} else {
 		url = DOWNLOADBILL_URL
@@ -319,7 +317,7 @@ func (c *Client) DownloadBill(params Params) (Params, error) {
 // 交易保障
 func (c *Client) Report(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_REPORT_URL
 	} else {
 		url = REPORT_URL
@@ -334,7 +332,7 @@ func (c *Client) Report(params Params) (Params, error) {
 // 转换短链接
 func (c *Client) ShortUrl(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_SHORTURL_URL
 	} else {
 		url = SHORTURL_URL
@@ -349,7 +347,7 @@ func (c *Client) ShortUrl(params Params) (Params, error) {
 // 授权码查询OPENID接口
 func (c *Client) AuthCodeToOpenid(params Params) (Params, error) {
 	var url string
-	if c.useSandbox {
+	if c.account.isSandbox {
 		url = SANDBOX_AUTHCODETOOPENID_URL
 	} else {
 		url = AUTHCODETOOPENID_URL
