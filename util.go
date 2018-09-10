@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-func xmlToMap(r io.Reader) Params {
+func XmlToMap(r io.Reader) Params {
 
 	params := make(Params)
 
@@ -42,7 +42,7 @@ func xmlToMap(r io.Reader) Params {
 	return params
 }
 
-func mapToXml(reqData Params) string {
+func MapToXml(reqData Params) string {
 	var buf bytes.Buffer
 	buf.WriteString(`<xml>`)
 	for k, v := range reqData {

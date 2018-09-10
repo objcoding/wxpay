@@ -64,7 +64,7 @@ func (c *Client) fillRequestData(params Params) Params {
 func (c *Client) postWithoutCert(url string, params Params) (string, error) {
 	h := &http.Client{}
 	p := c.fillRequestData(params)
-	response, err := h.Post(url, bodyType, strings.NewReader(mapToXml(p)))
+	response, err := h.Post(url, bodyType, strings.NewReader(MapToXml(p)))
 	if err != nil {
 		return "", err
 	}
@@ -93,7 +93,7 @@ func (c *Client) postWithCert(url string, params Params) (string, error) {
 	}
 	h := &http.Client{Transport: transport}
 	p := c.fillRequestData(params)
-	response, err := h.Post(url, bodyType, strings.NewReader(mapToXml(p)))
+	response, err := h.Post(url, bodyType, strings.NewReader(MapToXml(p)))
 	if err != nil {
 		return "", err
 	}
@@ -108,7 +108,7 @@ func (c *Client) postWithCert(url string, params Params) (string, error) {
 func (c *Client) generateSignedXml(params Params) string {
 	sign := c.Sign(params)
 	params.SetString(FIELD_SIGN, sign)
-	return mapToXml(params)
+	return MapToXml(params)
 }
 
 // 验证签名
@@ -168,7 +168,7 @@ func (c *Client) Sign(params Params) string {
 // 处理 HTTPS API返回数据，转换成Map对象。return_code为SUCCESS时，验证签名。
 func (c *Client) processResponseXml(xmlStr string) (Params, error) {
 	var returnCode string
-	params := xmlToMap(strings.NewReader(xmlStr))
+	params := XmlToMap(strings.NewReader(xmlStr))
 	if params.ContainsKey("return_code") {
 		returnCode = params.GetString("return_code")
 	} else {
@@ -306,7 +306,7 @@ func (c *Client) DownloadBill(params Params) (Params, error) {
 
 	// 如果出现错误，返回XML数据
 	if strings.Index(xmlStr, "<") == 0 {
-		p = xmlToMap(strings.NewReader(xmlStr))
+		p = XmlToMap(strings.NewReader(xmlStr))
 		return p, err
 	} else { // 正常返回csv数据
 		p.SetString("return_code", SUCCESS)
