@@ -8,16 +8,14 @@ import (
 	"errors"
 	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/pkcs12"
-	"io"
 	"log"
 	"strings"
 )
 
-func xmlToMap(r io.Reader) Params {
+func XmlToMap(xmlStr string) Params {
 
 	params := make(Params)
-
-	decoder := xml.NewDecoder(r)
+	decoder := xml.NewDecoder(strings.NewReader(xmlStr))
 
 	var (
 		key   string
@@ -42,10 +40,10 @@ func xmlToMap(r io.Reader) Params {
 	return params
 }
 
-func mapToXml(reqData Params) string {
+func MapToXml(params Params) string {
 	var buf bytes.Buffer
 	buf.WriteString(`<xml>`)
-	for k, v := range reqData {
+	for k, v := range params {
 		buf.WriteString(`<`)
 		buf.WriteString(k)
 		buf.WriteString(`><![CDATA[`)
