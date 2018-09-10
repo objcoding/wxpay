@@ -1,15 +1,9 @@
-# wxpay for golang
+# wxpay 
 
-注：本人照着微信支付官方 SDK Java 版，用 Go 语言实现的一个微信支付 SDK，与 Java 版功能一致，具备轻量易上手，且功能齐全的特点，理论上性能也会比 Java 版的更快。
-
-#### Github 地址: [wxpay](https://github.com/objcoding/wxpay)
+![Powered by zch](https://img.shields.io/badge/Powered%20by-zch-blue.svg?style=flat-square) ![Language](https://img.shields.io/badge/language-Go-orange.svg) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
 
 
-## 微信支付开发文档API
-
-对[微信支付开发者文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)中给出的API进行了封装。
-
-wxpay提供了对应的方法：
+wxpay 提供了对应的方法：
 
 | 方法名              | 说明          |
 | ---------------- | ----------- |
@@ -25,8 +19,8 @@ wxpay提供了对应的方法：
 | ShortUrl         | 转换短链接       |
 | AuthCodeToOpenid | 授权码查询openid |
 
-* 参数为`Params`类型，返回类型也是`Params`，`Params` 是一个 map[string]string 类型的结构体。
-* 方法内部会将参数会转换成含有`appid`、`mch_id`、`nonce_str`、`sign\_type`和`sign`的XML；
+* 参数为`Params`类型，返回类型也是`Params`，`Params` 是一个 map[string]string 类型。
+* 方法内部会将参数会转换成含有`appid`、`mch_id`、`nonce_str`、`sign_type`和`sign`的XML；
 * 默认使用MD5进行签名；
 * 通过HTTPS请求得到返回数据后会对其做必要的处理（例如验证签名，签名错误则抛出异常）。
 * 对于downloadBill，无论是否成功都返回Map，且都含有`return_code`和`return_msg`。若成功，其中`return_code`为`SUCCESS`，另外`data`对应对账单数据。
@@ -129,3 +123,4 @@ return wxpay.Notifies{}.NotOK("支付失败或退款失败了")
 
 ## License
 MIT license
+
