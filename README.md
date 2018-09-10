@@ -112,6 +112,16 @@ b := client.ValidSign(params)
 
 ```cgo
 
+// xml解析
+params := wxpay.XmlToMap(xmlStr)
+
+// map封装xml请求参数
+b := wxpay.MapToXml(params)
+
+```
+
+```cgo
+
 // 支付或退款返回成功信息
 return wxpay.Notifies{}.OK()
 

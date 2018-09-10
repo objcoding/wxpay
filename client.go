@@ -168,7 +168,7 @@ func (c *Client) Sign(params Params) string {
 // 处理 HTTPS API返回数据，转换成Map对象。return_code为SUCCESS时，验证签名。
 func (c *Client) processResponseXml(xmlStr string) (Params, error) {
 	var returnCode string
-	params := XmlToMap(strings.NewReader(xmlStr))
+	params := XmlToMap(xmlStr)
 	if params.ContainsKey("return_code") {
 		returnCode = params.GetString("return_code")
 	} else {
@@ -306,7 +306,7 @@ func (c *Client) DownloadBill(params Params) (Params, error) {
 
 	// 如果出现错误，返回XML数据
 	if strings.Index(xmlStr, "<") == 0 {
-		p = XmlToMap(strings.NewReader(xmlStr))
+		p = XmlToMap(xmlStr)
 		return p, err
 	} else { // 正常返回csv数据
 		p.SetString("return_code", SUCCESS)
