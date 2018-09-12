@@ -34,6 +34,13 @@ $ go get github.com/objcoding/wxpay
 
 ```
 
+## go modules
+```cgo
+// go.mod
+module github.com/objcoding/wxpay
+
+```
+
 
 ## 示例
 
