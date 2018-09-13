@@ -105,16 +105,16 @@ func (c *Client) postWithCert(url string, params Params) (string, error) {
 // 生成带有签名的xml字符串
 func (c *Client) generateSignedXml(params Params) string {
 	sign := c.Sign(params)
-	params.SetString(FIELD_SIGN, sign)
+	params.SetString(Sign, sign)
 	return MapToXml(params)
 }
 
 // 验证签名
 func (c *Client) ValidSign(params Params) bool {
-	if !params.ContainsKey(FIELD_SIGN) {
+	if !params.ContainsKey(Sign) {
 		return false
 	}
-	return params.GetString(FIELD_SIGN) == c.Sign(params)
+	return params.GetString(Sign) == c.Sign(params)
 }
 
 // 签名
@@ -172,9 +172,9 @@ func (c *Client) processResponseXml(xmlStr string) (Params, error) {
 	} else {
 		return nil, errors.New("no return_code in XML")
 	}
-	if returnCode == FAIL {
+	if returnCode == Fail {
 		return params, nil
-	} else if returnCode == SUCCESS {
+	} else if returnCode == Success {
 		if c.ValidSign(params) {
 			return params, nil
 		} else {
@@ -189,9 +189,9 @@ func (c *Client) processResponseXml(xmlStr string) (Params, error) {
 func (c *Client) UnifiedOrder(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_UNIFIEDORDER_URL
+		url = SandboxUnifiedOrderUrl
 	} else {
-		url = UNIFIEDORDER_URL
+		url = UnifiedOrderUrl
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
@@ -204,9 +204,9 @@ func (c *Client) UnifiedOrder(params Params) (Params, error) {
 func (c *Client) MicroPay(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_MICROPAY_URL
+		url = SandboxMicroPayUrl
 	} else {
-		url = MICROPAY_URL
+		url = MicroPayUrl
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
@@ -219,9 +219,9 @@ func (c *Client) MicroPay(params Params) (Params, error) {
 func (c *Client) Refund(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_REFUND_URL
+		url = SandboxRefundUrl
 	} else {
-		url = REFUND_URL
+		url = RefundUrl
 	}
 	xmlStr, err := c.postWithCert(url, params)
 	if err != nil {
@@ -234,9 +234,9 @@ func (c *Client) Refund(params Params) (Params, error) {
 func (c *Client) OrderQuery(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_ORDERQUERY_URL
+		url = SandboxOrderQueryUrl
 	} else {
-		url = ORDERQUERY_URL
+		url = OrderQueryUrl
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
@@ -249,9 +249,9 @@ func (c *Client) OrderQuery(params Params) (Params, error) {
 func (c *Client) RefundQuery(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_REFUNDQUERY_URL
+		url = SandboxRefundQueryUrl
 	} else {
-		url = REFUNDQUERY_URL
+		url = RefundQueryUrl
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
@@ -264,9 +264,9 @@ func (c *Client) RefundQuery(params Params) (Params, error) {
 func (c *Client) Reverse(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_REVERSE_URL
+		url = SandboxReverseUrl
 	} else {
-		url = REVERSE_URL
+		url = ReverseUrl
 	}
 	xmlStr, err := c.postWithCert(url, params)
 	if err != nil {
@@ -279,9 +279,9 @@ func (c *Client) Reverse(params Params) (Params, error) {
 func (c *Client) CloseOrder(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_CLOSEORDER_URL
+		url = SandboxCloseOrderUrl
 	} else {
-		url = CLOSEORDER_URL
+		url = CloseOrderUrl
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
@@ -294,9 +294,9 @@ func (c *Client) CloseOrder(params Params) (Params, error) {
 func (c *Client) DownloadBill(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_DOWNLOADBILL_URL
+		url = SandboxDownloadBillUrl
 	} else {
-		url = DOWNLOADBILL_URL
+		url = DownloadBillUrl
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 
@@ -307,7 +307,7 @@ func (c *Client) DownloadBill(params Params) (Params, error) {
 		p = XmlToMap(xmlStr)
 		return p, err
 	} else { // 正常返回csv数据
-		p.SetString("return_code", SUCCESS)
+		p.SetString("return_code", Success)
 		p.SetString("return_msg", "ok")
 		p.SetString("data", xmlStr)
 		return p, err
@@ -318,9 +318,9 @@ func (c *Client) DownloadBill(params Params) (Params, error) {
 func (c *Client) Report(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_REPORT_URL
+		url = SandboxReportUrl
 	} else {
-		url = REPORT_URL
+		url = ReportUrl
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
@@ -333,9 +333,9 @@ func (c *Client) Report(params Params) (Params, error) {
 func (c *Client) ShortUrl(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_SHORTURL_URL
+		url = SandboxShortUrl
 	} else {
-		url = SHORTURL_URL
+		url = ShortUrl
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
@@ -348,9 +348,9 @@ func (c *Client) ShortUrl(params Params) (Params, error) {
 func (c *Client) AuthCodeToOpenid(params Params) (Params, error) {
 	var url string
 	if c.account.isSandbox {
-		url = SANDBOX_AUTHCODETOOPENID_URL
+		url = SandboxAuthCodeToOpenidUrl
 	} else {
-		url = AUTHCODETOOPENID_URL
+		url = AuthCodeToOpenidUrl
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
