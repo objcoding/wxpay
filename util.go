@@ -5,11 +5,11 @@ import (
 	"crypto/tls"
 	"encoding/pem"
 	"encoding/xml"
-	"errors"
-	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/pkcs12"
 	"log"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func XmlToMap(xmlStr string) Params {
@@ -57,13 +57,9 @@ func MapToXml(params Params) string {
 	return buf.String()
 }
 
-// 生成随机字符串
+// 用时间戳生成随机字符串
 func nonceStr() string {
-	uid, err := uuid.NewV4()
-	if err != nil {
-		return errors.New("生成随机字符串").Error()
-	}
-	return strings.Replace(uid.String(), "-", "", -1)
+	return strconv.FormatInt(time.Now().UTC().UnixNano(), 10)
 }
 
 // 将Pkcs12转成Pem

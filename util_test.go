@@ -18,3 +18,7 @@ func TestMapToXml(t *testing.T) {
 	xmlStr := MapToXml(params)
 	t.Log(xmlStr)
 }
+
+func TestNonceStr(t *testing.T) {
+	t.Log(nonceStr())
+}
