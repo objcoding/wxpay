@@ -23,7 +23,7 @@ wxpay 提供了以下的方法：
 * 方法内部会将参数会转换成含有`appid`、`mch_id`、`nonce_str`、`sign_type`和`sign`的XML；
 * 默认使用MD5进行签名；
 * 通过HTTPS请求得到返回数据后会对其做必要的处理（例如验证签名，签名错误则抛出异常）。
-* 对于downloadBill，无论是否成功都返回Map，且都含有`return_code`和`return_msg`。若成功，其中`return_code`为`SUCCESS`，另外`data`对应对账单数据。
+* 对于DownloadBill，无论是否成功都返回Map，且都含有`return_code`和`return_msg`。若成功，其中`return_code`为`SUCCESS`，另外`data`对应对账单数据。
 
 
 ## 安装
@@ -36,7 +36,7 @@ $ go get github.com/objcoding/wxpay
 ## go modules
 ```cgo
 // go.mod
-module github.com/objcoding/wxpay
+require github.com/objcoding/wxpay v1.0.3
 
 ```
 
@@ -44,14 +44,31 @@ module github.com/objcoding/wxpay
 ## 示例
 
 ```cgo
-// 新建微信支付客户端
-client := wxpay.NewClient(wxpay.NewAccount{
-	AppID: "appid",
-	MchID: "mchid",
-	ApiKey: "apiKey",
-	isSanbox: false
-})
+// 创建支付账户
+account1 := wxpay.NewAccount("appid", "mchid", "apiKey", false)
+account2 := wxpay.NewAccount("appid", "mchid", "apiKey", false)
 
+// 新建微信支付客户端
+client := wxpay.NewClient(account1)
+
+// 设置证书
+account.SetCertData("证书地址")
+
+// 设置支付账户
+client.setAccount(account2)
+
+// 设置http请求超时时间
+client.SetHttpConnectTimeoutMs(2000)
+
+// 设置http读取信息流超时时间
+client.SetHttpReadTimeoutMs(1000)
+
+// 更改签名类型
+client.SetSignType(HMACSHA256)
+
+```
+
+```cgo
 // 统一下单
 params := make(wxpay.Params)
 params.SetString("body", "test").
@@ -82,26 +99,6 @@ p, _ := client.RefundQuery(params)
 
 ```
 
-```cgo
-// 创建支付账户
-account := wxpay.NewAccount("appid", "mchid", "apiKey", false)
-
-// 设置证书
-account.SetCertData("证书地址")
-
-// 设置支付账户
-client.setAccount(account)
-
-// 设置http请求超时时间
-client.SetHttpConnectTimeoutMs(2000)
-
-// 设置http读取信息流超时时间
-client.SetHttpReadTimeoutMs(1000)
-
-// 更改签名类型
-client.SetSignType(HMACSHA256)
-
-```
 
 ```cgo
 // 签名
