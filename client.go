@@ -3,6 +3,7 @@ package wxpay
 import (
 	"bytes"
 	"crypto/md5"
+	"crypto/hmac"
 	"crypto/sha256"
 	"crypto/tls"
 	"encoding/hex"
@@ -147,7 +148,7 @@ func (c *Client) Sign(params Params) string {
 
 	var (
 		dataMd5    [16]byte
-		dataSha256 [32]byte
+		dataSha256 []byte
 		str        string
 	)
 
@@ -156,7 +157,9 @@ func (c *Client) Sign(params Params) string {
 		dataMd5 = md5.Sum(buf.Bytes())
 		str = hex.EncodeToString(dataMd5[:]) //需转换成切片
 	case HMACSHA256:
-		dataSha256 = sha256.Sum256(buf.Bytes())
+		h:=hmac.New(sha256.New,[]byte(c.account.apiKey))
+		h.Write(buf.Bytes())
+		dataSha256 = h.Sum(nil)
 		str = hex.EncodeToString(dataSha256[:])
 	}
 
