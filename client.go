@@ -2,8 +2,8 @@ package wxpay
 
 import (
 	"bytes"
-	"crypto/md5"
 	"crypto/hmac"
+	"crypto/md5"
 	"crypto/sha256"
 	"crypto/tls"
 	"encoding/hex"
@@ -67,6 +67,7 @@ func (c *Client) postWithoutCert(url string, params Params) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer response.Body.Close()
 	res, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return "", err
@@ -96,6 +97,7 @@ func (c *Client) postWithCert(url string, params Params) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer response.Body.Close()
 	res, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return "", err
@@ -157,7 +159,7 @@ func (c *Client) Sign(params Params) string {
 		dataMd5 = md5.Sum(buf.Bytes())
 		str = hex.EncodeToString(dataMd5[:]) //需转换成切片
 	case HMACSHA256:
-		h:=hmac.New(sha256.New,[]byte(c.account.apiKey))
+		h := hmac.New(sha256.New, []byte(c.account.apiKey))
 		h.Write(buf.Bytes())
 		dataSha256 = h.Sum(nil)
 		str = hex.EncodeToString(dataSha256[:])
