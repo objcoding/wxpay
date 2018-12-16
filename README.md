@@ -36,7 +36,7 @@ $ go get github.com/objcoding/wxpay
 ## go modules
 ```cgo
 // go.mod
-require github.com/objcoding/wxpay v1.0.3
+require github.com/objcoding/wxpay v1.0.5
 
 ```
 
