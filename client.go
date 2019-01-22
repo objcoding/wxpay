@@ -305,7 +305,7 @@ func (c *Client) DownloadBill(params Params) (Params, error) {
 	}
 	xmlStr, err := c.postWithoutCert(url, params)
 
-	var p Params
+	p := make(Params)
 
 	// 如果出现错误，返回XML数据
 	if strings.Index(xmlStr, "<") == 0 {
@@ -328,7 +328,7 @@ func (c *Client) DownloadFundFlow(params Params) (Params, error) {
 	}
 	xmlStr, err := c.postWithCert(url, params)
 
-	var p Params
+	p := make(Params)
 
 	// 如果出现错误，返回XML数据
 	if strings.Index(xmlStr, "<") == 0 {
