@@ -319,6 +319,29 @@ func (c *Client) DownloadBill(params Params) (Params, error) {
 	}
 }
 
+func (c *Client) DownloadFundFlow(params Params) (Params, error) {
+	var url string
+	if c.account.isSandbox {
+		url = SandboxDownloadFundFlowUrl
+	} else {
+		url = DownloadFundFlowUrl
+	}
+	xmlStr, err := c.postWithCert(url, params)
+
+	var p Params
+
+	// 如果出现错误，返回XML数据
+	if strings.Index(xmlStr, "<") == 0 {
+		p = XmlToMap(xmlStr)
+		return p, err
+	} else { // 正常返回csv数据
+		p.SetString("return_code", Success)
+		p.SetString("return_msg", "ok")
+		p.SetString("data", xmlStr)
+		return p, err
+	}
+}
+
 // 交易保障
 func (c *Client) Report(params Params) (Params, error) {
 	var url string
