@@ -1,42 +1,62 @@
 package wxpay
 
 import (
-	"bytes"
 	"crypto/tls"
 	"encoding/pem"
 	"encoding/xml"
 	"golang.org/x/crypto/pkcs12"
 	"log"
 	"strconv"
-	"strings"
 	"time"
+	"io"
+	"bytes"
 )
 
-func XmlToMap(xmlStr string) Params {
+type xmlMapEntry struct {
+	XMLName xml.Name
+	Value   string 	`xml:",chardata"`
+}
 
-	params := make(Params)
-	decoder := xml.NewDecoder(strings.NewReader(xmlStr))
-
-	var (
-		key   string
-		value string
-	)
-
-	for t, err := decoder.Token(); err == nil; t, err = decoder.Token() {
-		switch token := t.(type) {
-		case xml.StartElement: // 开始标签
-			key = token.Name.Local
-		case xml.CharData: // 标签内容
-			content := string([]byte(token))
-			value = content
-		}
-		if key != "xml" {
-			if value != "\n" {
-				params.SetString(key, value)
-			}
-		}
+func (m Params) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	if len(m) == 0 {
+		return nil
+	}
+	start.Name.Local = "xml" // 更改xml开始标签
+	err := e.EncodeToken(start)
+	if err != nil {
+		return err
 	}
 
+	for k, v := range m {
+		e.Encode(xmlMapEntry{XMLName: xml.Name{Local: k}, Value: v})
+	}
+
+	return e.EncodeToken(start.End())
+}
+
+func (m *Params) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	*m = Params{}
+	for {
+		var e xmlMapEntry
+
+		err := d.Decode(&e)
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return err
+		}
+
+		(*m)[e.XMLName.Local] = e.Value
+	}
+	return nil
+}
+
+func XmlToMap(xmlStr string) Params {
+	params := make(Params)
+	err := xml.Unmarshal([]byte(xmlStr), &params)
+	if err != nil {
+		panic(err)
+	}
 	return params
 }
 
