@@ -55,7 +55,7 @@ client := wxpay.NewClient(account1)
 account.SetCertData("证书地址")
 
 // 设置支付账户
-client.setAccount(account2)
+client.SetAccount(account2)
 
 // 设置http请求超时时间
 client.SetHttpConnectTimeoutMs(2000)
