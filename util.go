@@ -3,6 +3,7 @@ package wxpay
 import (
 	"bytes"
 	"crypto/tls"
+	"encoding/json"
 	"encoding/pem"
 	"encoding/xml"
 	"golang.org/x/crypto/pkcs12"
@@ -55,6 +56,14 @@ func MapToXml(params Params) string {
 	buf.WriteString(`</xml>`)
 
 	return buf.String()
+}
+
+func MapToJson(params Params) string {
+	paramData, err := json.Marshal(params)
+	if err != nil {
+		return "{}"
+	}
+	return string(paramData)
 }
 
 // 用时间戳生成随机字符串
