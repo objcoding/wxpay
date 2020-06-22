@@ -53,6 +53,12 @@ func (c *Client) SetAccount(account *Account) {
 func (c *Client) fillRequestData(params Params) Params {
 	params["appid"] = c.account.appID
 	params["mch_id"] = c.account.mchID
+	if c.account.subAppId != "" {
+		params["sub_appid"] = c.account.subAppId
+	}
+	if c.account.subMchId != "" {
+		params["sub_mch_id"] = c.account.subMchId
+	}
 	params["nonce_str"] = nonceStr()
 	params["sign_type"] = c.signType
 	params["sign"] = c.Sign(params)
@@ -380,6 +386,86 @@ func (c *Client) AuthCodeToOpenid(params Params) (Params, error) {
 	} else {
 		url = AuthCodeToOpenidUrl
 	}
+	xmlStr, err := c.postWithoutCert(url, params)
+	if err != nil {
+		return nil, err
+	}
+	return c.processResponseXml(xmlStr)
+}
+
+// 添加分账接收方
+func (c *Client) ProfitSharingAddReceiver(params Params) (Params, error) {
+	url := ProfitSharingAddReceiverUrl
+	xmlStr, err := c.postWithoutCert(url, params)
+	if err != nil {
+		return nil, err
+	}
+	return c.processResponseXml(xmlStr)
+}
+
+// 删除分账接收方
+func (c *Client) ProfitSharingRemoveReceiver(params Params) (Params, error) {
+	url := ProfitSharingRemoveReceiverUrl
+	xmlStr, err := c.postWithoutCert(url, params)
+	if err != nil {
+		return nil, err
+	}
+	return c.processResponseXml(xmlStr)
+}
+
+// 提交单次分账
+func (c *Client) ProfitSharing(params Params) (Params, error) {
+	url := ProfitSharingUrl
+	xmlStr, err := c.postWithCert(url, params)
+	if err != nil {
+		return nil, err
+	}
+	return c.processResponseXml(xmlStr)
+}
+
+// 查询分账结果
+func (c *Client) ProfitSharingQuery(params Params) (Params, error) {
+	url := ProfitSharingQueryUrl
+	xmlStr, err := c.postWithoutCert(url, params)
+	if err != nil {
+		return nil, err
+	}
+	return c.processResponseXml(xmlStr)
+}
+
+// 分账回退
+func (c *Client) ProfitSharingReturn(params Params) (Params, error) {
+	url := ProfitSharingReturnUrl
+	xmlStr, err := c.postWithCert(url, params)
+	if err != nil {
+		return nil, err
+	}
+	return c.processResponseXml(xmlStr)
+}
+
+// 分账回退结果查询
+func (c *Client) ProfitSharingReturnQuery(params Params) (Params, error) {
+	url := ProfitSharingReturnQueryUrl
+	xmlStr, err := c.postWithoutCert(url, params)
+	if err != nil {
+		return nil, err
+	}
+	return c.processResponseXml(xmlStr)
+}
+
+// 分账完结
+func (c *Client) ProfitSharingFinish(params Params) (Params, error) {
+	url := ProfitSharingFinishUrl
+	xmlStr, err := c.postWithoutCert(url, params)
+	if err != nil {
+		return nil, err
+	}
+	return c.processResponseXml(xmlStr)
+}
+
+// 请求多次分账
+func (c *Client) MultiProfitSharing(params Params) (Params, error) {
+	url := MultiProfitSharingUrl
 	xmlStr, err := c.postWithoutCert(url, params)
 	if err != nil {
 		return nil, err
