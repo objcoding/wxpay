@@ -18,21 +18,22 @@ func XmlToMap(xmlStr string) Params {
 	decoder := xml.NewDecoder(strings.NewReader(xmlStr))
 
 	var (
-		key   string
-		value string
+		key   *string
+		value *string
 	)
 
 	for t, err := decoder.Token(); err == nil; t, err = decoder.Token() {
 		switch token := t.(type) {
 		case xml.StartElement: // 开始标签
-			key = token.Name.Local
+			key = &token.Name.Local
 		case xml.CharData: // 标签内容
 			content := string([]byte(token))
-			value = content
-		}
-		if key != "xml" {
-			if value != "\n" {
-				params.SetString(key, value)
+			value = &content
+		case xml.EndElement: // 结束标签
+			if key != nil && value != nil && *key != "xml" {
+				params.SetString(*key, *value)
+				key = nil
+				value = nil
 			}
 		}
 	}
